@@ -11,28 +11,68 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-Event Driven State Management solution for Flutter.
+The Non-Nonsense Event Driven State Management solution for Flutter.
 
-## Features
+## Washington
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+`Washington` is the capitol of your state management. You will use `Washington` to `dispath` events for your application.
 
 ```dart
-const like = 'sample';
+Washington.instance.dispatch(SomeEvent());
 ```
 
-## Additional information
+### UnitedStates
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+You use `UnitedState` objects to manager your application's `state`.
+
+To create these objects, all you have to do is extend the `UnitedState` class and add handlers for all the events you want your `UnitedState` to act upon.
+
+Each `UnitedState` should be responsible for a specific _area_ of your app. For example, you could have a `UserState`, `ProductsState` and `SettingsState`.
+
+sample:
+
+```dart
+class UserState extends UnitedState<User?> {
+    UserState() : super(null) {
+        addHandler<Login>((event) => ... );
+        addHandler<Logout>((event) => ... );
+        ...
+    }
+}
+```
+
+### Events
+
+An event can be any object you want. You use `Washington` to dispatch these events. `Washington` will make sure that the events reach all the `UnitedState`s so they can do their thing.
+
+Because you can dispatch anything as an event, you are able to dispatch events that can be handled by multiple states at the same time.
+
+You can dispatch a `UserLogout` event and the `UserState` can act upon this. But the `SettingsState` could also use this event to clear all the user's preferences.
+
+## Widgets
+
+To use `Washington` in your Flutter application you can use a set of conviniet widgets that help you build or trigger UI elements based on events and state changes.
+
+### StateProvider
+
+States can be scoped in the _widget tree_ by using `StateProviders`.
+
+...
+
+### StateBuilder
+
+To build the UI based on the current state you can use `StateBuilder`.
+
+...
+
+### Statelistener
+
+When you need to trigger one-off actions (like navigating or showing a snackbar) based on state changes, you can use the 'StateListener'. 
+
+...
+
+### EventListen
+
+If you want to trigger one-off actions but based on the events being dispatched, instead of a state change, you can use the EventListener.
+
+...

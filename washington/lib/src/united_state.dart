@@ -2,7 +2,7 @@ part of 'washington.dart';
 
 typedef StateHandler = void Function(Object event);
 
-class UnitedState<T> extends ChangeNotifier {
+class UnitedState<T extends Object> extends ChangeNotifier {
   final _handlers = <Type, StateHandler>{};
   T _value;
   T get value => _value;

@@ -15,7 +15,7 @@ class StateBuilder<T extends UnitedState> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final s = context.watch<T>();
-    return builder(context, s, child);
+    final state = context.watch<T>();
+    return builder(context, state, child);
   }
 }
