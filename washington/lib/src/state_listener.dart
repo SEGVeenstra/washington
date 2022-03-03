@@ -27,15 +27,19 @@ class _StateListenerState<T extends UnitedState> extends State<StateListener> {
   @override
   Widget build(BuildContext context) {
     if (_listener != null) {
+      print('$this - _listener == null');
       state?.removeListener(_listener!);
+      print('$this - _listener has been removed');
     }
 
     state = context.read<T>();
     _listener = () {
       widget._listenerCallback(context, state!);
     };
+    print('_listener has been set');
 
     state?.addListener(_listener!);
+    print('$this - _listener has been added as listener to state');
     return widget.child;
   }
 

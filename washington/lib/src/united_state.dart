@@ -50,9 +50,10 @@ class UnitedState<T extends Object> extends ChangeNotifier {
     _handlers[Tevent] = (Object e) => handler(e as Tevent);
   }
 
-  @protected
-  void destroy() {
+  @override
+  void dispose() {
     _handlers.clear();
     Washington.instance._remove(this);
+    super.dispose();
   }
 }

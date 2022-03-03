@@ -10,7 +10,7 @@ class Washington {
 
   Washington._();
 
-  final _eventListeners = <EventCallback>[];
+  final _eventListeners = <EventCallback>{};
   final states = <UnitedState>[];
 
   void addListener(EventCallback listener) => _eventListeners.add(listener);
