@@ -2,41 +2,16 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:washington/washington.dart';
 
-class StateProvider<T extends UnitedState<Object>> extends StatefulWidget {
-  final T state;
-  final Widget child;
-
-  const StateProvider({
-    required this.child,
-    required this.state,
+/// A [StateProvider] can be used to add a State object to the _widget tree_.
+///
+/// It's nothing more then a convinient subclass of [ChangeNotifierProvider] that
+/// makes it easier to remember to use the right [Provider].
+///
+/// Trying to provide a [UnitedState] with a normal [Provider] would show an assert error.
+class StateProvider<T extends UnitedState<Object>> extends ChangeNotifierProvider<T> {
+  StateProvider({
+    required Widget child,
+    required T Function(BuildContext context) create,
     Key? key,
-  }) : super(key: key);
-
-  @override
-  State createState() => _StateProviderState<T>();
-
-  static T of<T>(BuildContext context) {
-    final state = Provider.of<T>(context);
-
-    assert(state == null, 'No StateProvider found for $T');
-
-    return state!;
-  }
-}
-
-class _StateProviderState<T extends UnitedState<Object>>
-    extends State<StateProvider<T>> {
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => widget.state,
-      child: widget.child,
-    );
-  }
-
-  @override
-  void dispose() {
-    widget.state.dispose();
-    super.dispose();
-  }
+  }) : super(child: child, create: create, key: key);
 }

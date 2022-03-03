@@ -14,6 +14,11 @@ class CounterResetPressed {}
 
 class CounterRandomPressed {}
 
+class CounterDividePressed {
+  final int divideBy;
+  const CounterDividePressed(this.divideBy);
+}
+
 // CounterState Event
 // These will be dispatched by our state object to notify other States or
 // EventListeners.
@@ -43,6 +48,7 @@ class CounterState extends UnitedState<int> {
     addHandler<CounterDecrementPressed>(_decrement);
     addHandler<CounterResetPressed>(_reset);
     addHandler<CounterRandomPressed>(_random);
+    addHandler<CounterDividePressed>(_divide);
   }
 
   void _increment(CounterIncrementPressed event) {
@@ -77,6 +83,14 @@ class CounterState extends UnitedState<int> {
       setState(newValue);
     });
   }
+
+  void _divide(CounterDividePressed event) {
+    if (event.divideBy == 0) {
+      setState(value, error: 'Cannot divide by 0');
+    } else {
+      setState((value / event.divideBy).round());
+    }
+  }
 }
 
 void main() {
@@ -89,7 +103,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StateProvider(
-      state: CounterState(lowerLimit: 0, upperLimit: 5),
+      create: (_) => CounterState(lowerLimit: 0, upperLimit: 10),
       child: MaterialApp(
         title: 'Washington Demo',
         theme: ThemeData(primarySwatch: Colors.purple),
@@ -116,17 +130,17 @@ class MyHomePage extends StatelessWidget {
             child: EventListener(
               listener: (context, event) {
                 if (event is CounterResetted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Counter has been reset!')));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Counter has been reset!')));
                 }
                 if (event is LimitReached) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('A limit has been reached!')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(content: Text('A limit has been reached!')));
                 }
               },
               child: StateListener<CounterState>(
                 listener: (context, state) {
-                  if (state.value >= 10) {
+                  // We can trigger events based on state changes
+                  if (state.value >= 7) {
                     Washington.instance.dispatch(CounterResetPressed());
                   }
                 },
@@ -135,13 +149,24 @@ class MyHomePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       const Text(
-                        'You have pushed the button this many times:',
+                        'Current value:',
                       ),
                       StateBuilder<CounterState>(
                         builder: (context, state, _) {
+                          final String text;
+                          if (state.hasError) {
+                            text = state.error.toString();
+                          } else if (state.isLoading) {
+                            text = 'loading...';
+                          } else {
+                            text = state.value.toString();
+                          }
                           return Text(
-                            '${state.isLoading ? 'loading...' : state.value}',
-                            style: Theme.of(context).textTheme.headline4,
+                            text,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline4
+                                ?.copyWith(color: state.hasError ? Colors.red : null),
                           );
                         },
                       ),
@@ -172,34 +197,36 @@ class Controls extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ElevatedButton.icon(
-              onPressed: counterState.canIncrement
-                  ? () =>
-                      Washington.instance.dispatch(CounterIncrementPressed())
-                  : null,
+              onPressed:
+                  counterState.canIncrement ? () => Washington.instance.dispatch(CounterIncrementPressed()) : null,
               icon: const Icon(Icons.add),
               label: const Text('Increment'),
             ),
             ElevatedButton.icon(
-              onPressed: counterState.canDecrement
-                  ? () =>
-                      Washington.instance.dispatch(CounterDecrementPressed())
-                  : null,
+              onPressed:
+                  counterState.canDecrement ? () => Washington.instance.dispatch(CounterDecrementPressed()) : null,
               icon: const Icon(Icons.remove),
               label: const Text('Decrement'),
             ),
             ElevatedButton.icon(
-              onPressed: counterState.canReset
-                  ? () => Washington.instance.dispatch(CounterResetPressed())
-                  : null,
+              onPressed: counterState.canReset ? () => Washington.instance.dispatch(CounterResetPressed()) : null,
               icon: const Icon(Icons.restore),
               label: const Text('Reset'),
             ),
             ElevatedButton.icon(
-              onPressed: counterState.canRandom
-                  ? () => Washington.instance.dispatch(CounterRandomPressed())
-                  : null,
+              onPressed: counterState.canRandom ? () => Washington.instance.dispatch(CounterRandomPressed()) : null,
               icon: const Icon(Icons.refresh),
-              label: const Text('Random'),
+              label: const Text('Random (fake network call)'),
+            ),
+            ElevatedButton(
+              onPressed:
+                  counterState.canRandom ? () => Washington.instance.dispatch(const CounterDividePressed(2)) : null,
+              child: const Text('Divide by 2'),
+            ),
+            ElevatedButton(
+              onPressed:
+                  counterState.canRandom ? () => Washington.instance.dispatch(const CounterDividePressed(0)) : null,
+              child: const Text('Divide by 0 (error)'),
             ),
           ],
         ),
