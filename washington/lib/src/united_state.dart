@@ -7,7 +7,18 @@ class UnitedState<T extends Object> extends ChangeNotifier {
   T _value;
   T get value => _value;
 
-  UnitedState(T initialValue) : _value = initialValue {
+  Object? _error;
+  Object? get error => _error;
+  bool get hasError => _error != null;
+
+  bool _isLoading;
+  bool get isLoading => _isLoading;
+
+  UnitedState(
+    T initialValue, {
+    bool isLoading = false,
+  })  : _value = initialValue,
+        _isLoading = isLoading {
     Washington.instance._add(this);
   }
 
@@ -16,15 +27,30 @@ class UnitedState<T extends Object> extends ChangeNotifier {
     handler?.call(event);
   }
 
-  void updateState(T value) {
+  @protected
+  void dispatch(Object event) {
+    Washington.instance.dispatch(event);
+  }
+
+  @protected
+  void setState(
+    T value, {
+    bool isLoading = false,
+    Object? error,
+  }) {
     _value = value;
+    _isLoading = isLoading;
+    _error = error;
+
     notifyListeners();
   }
 
-  void addHandler<Event>(StateHandler handler) {
-    _handlers[Event] = handler;
+  @protected
+  void addHandler<Tevent>(void Function(Tevent event) handler) {
+    _handlers[Tevent] = (Object e) => handler(e as Tevent);
   }
 
+  @protected
   void destroy() {
     _handlers.clear();
     Washington.instance._remove(this);

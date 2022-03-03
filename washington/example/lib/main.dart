@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:washington/washington.dart';
 
 // User Events
+// These are the actions we expect to recieve from the UI.
 class CounterIncrementPressed {}
 
 class CounterDecrementPressed {}
@@ -10,11 +11,16 @@ class CounterDecrementPressed {}
 class CounterResetPressed {}
 
 // CounterState Event
+// These will be dispatched by our state object to notify other States or
+// EventListeners.
 class CounterResetted {}
 
 class LimitReached {}
 
+// Extend UnitedState to create a CounterState
 class CounterState extends UnitedState<int> {
+  // You can use fields but they should always be final.
+  // If it's part of the (changing) state, it should be part of the `value`.
   final int lowerLimit;
   final int upperLimit;
 
@@ -22,28 +28,36 @@ class CounterState extends UnitedState<int> {
     required this.upperLimit,
     required this.lowerLimit,
   }) : super(0) {
-    addHandler<CounterIncrementPressed>((_) {
-      if (value < upperLimit) {
-        updateState(value + 1);
-      }
-      if (value == upperLimit) {
-        Washington.instance.dispatch(LimitReached());
-      }
-    });
+    // Add handlers to handle incomming events.
+    // Pro tip: use tear-offs to get a nice clean list of handlers.
+    addHandler<CounterIncrementPressed>(_increment);
+    addHandler<CounterDecrementPressed>(_decrement);
+    addHandler<CounterResetPressed>(_reset);
+  }
 
-    addHandler<CounterDecrementPressed>((_) {
-      if (value > lowerLimit) {
-        updateState(value - 1);
-      }
-      if (value == lowerLimit) {
-        Washington.instance.dispatch(LimitReached());
-      }
-    });
+  void _increment(CounterIncrementPressed event) {
+    // Here we do some logic checks and set the new State when needed.
+    if (value < upperLimit) {
+      setState(value + 1);
+    }
+    // When the value reached the upperLimit, we dispatch the LimitReached event.
+    if (value == upperLimit) {
+      dispatch(LimitReached());
+    }
+  }
 
-    addHandler<CounterResetPressed>((_) {
-      updateState(0);
-      Washington.instance.dispatch(CounterResetted());
-    });
+  void _decrement(CounterDecrementPressed event) {
+    if (value > lowerLimit) {
+      setState(value - 1);
+    }
+    if (value == lowerLimit) {
+      dispatch(LimitReached());
+    }
+  }
+
+  void _reset(CounterResetPressed event) {
+    setState(0);
+    dispatch(CounterResetted());
   }
 }
 
