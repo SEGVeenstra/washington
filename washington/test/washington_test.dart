@@ -19,6 +19,6 @@ class Increment {}
 
 class CounterState extends UnitedState<int> {
   CounterState() : super(0) {
-    addHandler<Increment>((event) => updateState(value + 1));
+    addHandler<Increment>((event) => setState(value + 1));
   }
 }

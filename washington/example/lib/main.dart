@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:washington/washington.dart';
@@ -9,6 +11,8 @@ class CounterIncrementPressed {}
 class CounterDecrementPressed {}
 
 class CounterResetPressed {}
+
+class CounterRandomPressed {}
 
 // CounterState Event
 // These will be dispatched by our state object to notify other States or
@@ -24,6 +28,11 @@ class CounterState extends UnitedState<int> {
   final int lowerLimit;
   final int upperLimit;
 
+  bool get canIncrement => !isLoading && value < upperLimit;
+  bool get canDecrement => !isLoading && value > lowerLimit;
+  bool get canReset => !isLoading && value != 0;
+  bool get canRandom => !isLoading;
+
   CounterState({
     required this.upperLimit,
     required this.lowerLimit,
@@ -33,6 +42,7 @@ class CounterState extends UnitedState<int> {
     addHandler<CounterIncrementPressed>(_increment);
     addHandler<CounterDecrementPressed>(_decrement);
     addHandler<CounterResetPressed>(_reset);
+    addHandler<CounterRandomPressed>(_random);
   }
 
   void _increment(CounterIncrementPressed event) {
@@ -58,6 +68,14 @@ class CounterState extends UnitedState<int> {
   void _reset(CounterResetPressed event) {
     setState(0);
     dispatch(CounterResetted());
+  }
+
+  void _random(CounterRandomPressed event) {
+    setState(value, isLoading: true);
+    Future.delayed(const Duration(seconds: 1), () {
+      final newValue = Random().nextInt(upperLimit);
+      setState(newValue);
+    });
   }
 }
 
@@ -88,74 +106,103 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counterState = context.watch<CounterState>();
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
       ),
-      body: EventListener(
-        listener: (context, event) {
-          if (event is CounterResetted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Counter has been reset!')));
-          }
-          if (event is LimitReached) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('A limit has been reached!')));
-          }
-        },
-        child: StateListener<CounterState>(
-          listener: (context, state) {
-            if (state.value >= 10) {
-              Washington.instance.dispatch(CounterResetPressed());
-            }
-          },
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  'You have pushed the button this many times:',
-                ),
-                StateBuilder<CounterState>(
-                  builder: (context, state, _) {
-                    return Text(
-                      '${state.value}',
-                      style: Theme.of(context).textTheme.headline4,
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
+      body: Column(
         children: [
-          if (counterState.value < counterState.upperLimit)
-            FloatingActionButton(
-              onPressed: () =>
-                  Washington.instance.dispatch(CounterIncrementPressed()),
-              tooltip: 'Increment',
-              child: const Icon(Icons.add),
+          Expanded(
+            child: EventListener(
+              listener: (context, event) {
+                if (event is CounterResetted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Counter has been reset!')));
+                }
+                if (event is LimitReached) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('A limit has been reached!')));
+                }
+              },
+              child: StateListener<CounterState>(
+                listener: (context, state) {
+                  if (state.value >= 10) {
+                    Washington.instance.dispatch(CounterResetPressed());
+                  }
+                },
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text(
+                        'You have pushed the button this many times:',
+                      ),
+                      StateBuilder<CounterState>(
+                        builder: (context, state, _) {
+                          return Text(
+                            '${state.isLoading ? 'loading...' : state.value}',
+                            style: Theme.of(context).textTheme.headline4,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          const SizedBox(height: 4),
-          if (counterState.value > counterState.lowerLimit)
-            FloatingActionButton(
-              onPressed: () =>
-                  Washington.instance.dispatch(CounterDecrementPressed()),
-              tooltip: 'Decrement',
-              child: const Icon(Icons.remove),
-            ),
-          const SizedBox(height: 4),
-          FloatingActionButton(
-            onPressed: () =>
-                Washington.instance.dispatch(CounterResetPressed()),
-            tooltip: 'Reset',
-            child: const Icon(Icons.restore),
           ),
+          const Expanded(child: Controls()),
         ],
+      ),
+    );
+  }
+}
+
+class Controls extends StatelessWidget {
+  const Controls({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final counterState = context.watch<CounterState>();
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ElevatedButton.icon(
+              onPressed: counterState.canIncrement
+                  ? () =>
+                      Washington.instance.dispatch(CounterIncrementPressed())
+                  : null,
+              icon: const Icon(Icons.add),
+              label: const Text('Increment'),
+            ),
+            ElevatedButton.icon(
+              onPressed: counterState.canDecrement
+                  ? () =>
+                      Washington.instance.dispatch(CounterDecrementPressed())
+                  : null,
+              icon: const Icon(Icons.remove),
+              label: const Text('Decrement'),
+            ),
+            ElevatedButton.icon(
+              onPressed: counterState.canReset
+                  ? () => Washington.instance.dispatch(CounterResetPressed())
+                  : null,
+              icon: const Icon(Icons.restore),
+              label: const Text('Reset'),
+            ),
+            ElevatedButton.icon(
+              onPressed: counterState.canRandom
+                  ? () => Washington.instance.dispatch(CounterRandomPressed())
+                  : null,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Random'),
+            ),
+          ],
+        ),
       ),
     );
   }
