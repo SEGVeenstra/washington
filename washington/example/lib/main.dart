@@ -130,11 +130,12 @@ class MyHomePage extends StatelessWidget {
             child: EventListener(
               listener: (context, event) {
                 if (event is CounterResetted) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Counter has been reset!')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Counter has been reset!')));
                 }
                 if (event is LimitReached) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(const SnackBar(content: Text('A limit has been reached!')));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('A limit has been reached!')));
                 }
               },
               child: StateListener<CounterState>(
@@ -157,7 +158,7 @@ class MyHomePage extends StatelessWidget {
                           if (state.hasError) {
                             text = state.error.toString();
                           } else if (state.isLoading) {
-                            text = 'loading...';
+                            text = 'Loading...';
                           } else {
                             text = state.value.toString();
                           }
@@ -166,10 +167,31 @@ class MyHomePage extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .headline4
-                                ?.copyWith(color: state.hasError ? Colors.red : null),
+                                ?.copyWith(
+                                    color: state.hasError ? Colors.red : null),
                           );
                         },
                       ),
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      StateValueBuilder<CounterState, int>(
+                        successBuilder: (context, state, child) => Text(
+                          state.value.toString(),
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                        errorBuilder: (context, state, child) => Text(
+                          state.error.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              ?.copyWith(color: Colors.red),
+                        ),
+                        loadingBuilder: (context, state, child) => Text(
+                          'Loading...',
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -197,35 +219,47 @@ class Controls extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ElevatedButton.icon(
-              onPressed:
-                  counterState.canIncrement ? () => Washington.instance.dispatch(CounterIncrementPressed()) : null,
+              onPressed: counterState.canIncrement
+                  ? () =>
+                      Washington.instance.dispatch(CounterIncrementPressed())
+                  : null,
               icon: const Icon(Icons.add),
               label: const Text('Increment'),
             ),
             ElevatedButton.icon(
-              onPressed:
-                  counterState.canDecrement ? () => Washington.instance.dispatch(CounterDecrementPressed()) : null,
+              onPressed: counterState.canDecrement
+                  ? () =>
+                      Washington.instance.dispatch(CounterDecrementPressed())
+                  : null,
               icon: const Icon(Icons.remove),
               label: const Text('Decrement'),
             ),
             ElevatedButton.icon(
-              onPressed: counterState.canReset ? () => Washington.instance.dispatch(CounterResetPressed()) : null,
+              onPressed: counterState.canReset
+                  ? () => Washington.instance.dispatch(CounterResetPressed())
+                  : null,
               icon: const Icon(Icons.restore),
               label: const Text('Reset'),
             ),
             ElevatedButton.icon(
-              onPressed: counterState.canRandom ? () => Washington.instance.dispatch(CounterRandomPressed()) : null,
+              onPressed: counterState.canRandom
+                  ? () => Washington.instance.dispatch(CounterRandomPressed())
+                  : null,
               icon: const Icon(Icons.refresh),
               label: const Text('Random (fake network call)'),
             ),
             ElevatedButton(
-              onPressed:
-                  counterState.canRandom ? () => Washington.instance.dispatch(const CounterDividePressed(2)) : null,
+              onPressed: counterState.canRandom
+                  ? () => Washington.instance
+                      .dispatch(const CounterDividePressed(2))
+                  : null,
               child: const Text('Divide by 2'),
             ),
             ElevatedButton(
-              onPressed:
-                  counterState.canRandom ? () => Washington.instance.dispatch(const CounterDividePressed(0)) : null,
+              onPressed: counterState.canRandom
+                  ? () => Washington.instance
+                      .dispatch(const CounterDividePressed(0))
+                  : null,
               child: const Text('Divide by 0 (error)'),
             ),
           ],
