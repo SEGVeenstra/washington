@@ -17,23 +17,17 @@ import 'package:washington/washington.dart';
 /// If you do pass an error, but have not declared an errorBuilder, this widget
 /// will throw an assertion error.
 class StateValueBuilder<T extends UnitedState, TValue> extends StatelessWidget {
-  final Widget? child;
-
-  final Widget Function(
-          BuildContext context, _SuccessState<TValue> state, Widget? child)
+  final Widget Function(BuildContext context, _SuccessState<TValue> state)
       successBuilder;
-  final Widget Function(
-          BuildContext context, _ErrorState<TValue> state, Widget? child)?
+  final Widget Function(BuildContext context, _ErrorState<TValue> state)?
       errorBuilder;
-  final Widget Function(
-          BuildContext context, _SuccessState<TValue> state, Widget? child)?
+  final Widget Function(BuildContext context, _SuccessState<TValue> state)?
       loadingBuilder;
 
   const StateValueBuilder({
     required this.successBuilder,
     this.errorBuilder,
     this.loadingBuilder,
-    this.child,
     Key? key,
   }) : super(key: key);
 
@@ -46,18 +40,17 @@ class StateValueBuilder<T extends UnitedState, TValue> extends StatelessWidget {
         'If you are planning on setting \'isLoading\' you must provide an \'loadingBuilder\'');
     if (state.hasError) {
       return errorBuilder!.call(
-          context,
-          _ErrorState(
-              error: state.error!,
-              value: state.value as TValue,
-              isLoading: state.isLoading),
-          child);
+        context,
+        _ErrorState(
+            error: state.error!,
+            value: state.value as TValue,
+            isLoading: state.isLoading),
+      );
     } else if (state.isLoading) {
       return loadingBuilder!
-          .call(context, _SuccessState(value: state.value as TValue), child);
+          .call(context, _SuccessState(value: state.value as TValue));
     }
-    return successBuilder(
-        context, _SuccessState(value: state.value as TValue), child);
+    return successBuilder(context, _SuccessState(value: state.value as TValue));
   }
 }
 
@@ -80,19 +73,16 @@ class _ErrorState<TValue> {
 }
 
 class StateBuilder<T extends UnitedState> extends StatelessWidget {
-  final Widget? child;
-
-  final Widget Function(BuildContext context, T state, Widget? child) builder;
+  final Widget Function(BuildContext context, T state) builder;
 
   const StateBuilder({
     required this.builder,
-    this.child,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<T>();
-    return builder(context, state, child);
+    return builder(context, state);
   }
 }

@@ -153,7 +153,7 @@ class MyHomePage extends StatelessWidget {
                         'Current value:',
                       ),
                       StateBuilder<CounterState>(
-                        builder: (context, state, _) {
+                        builder: (context, state) {
                           final String text;
                           if (state.hasError) {
                             text = state.error.toString();
@@ -176,18 +176,18 @@ class MyHomePage extends StatelessWidget {
                         height: 32,
                       ),
                       StateValueBuilder<CounterState, int>(
-                        successBuilder: (context, state, child) => Text(
+                        successBuilder: (context, state) => Text(
                           state.value.toString(),
                           style: Theme.of(context).textTheme.headline4,
                         ),
-                        errorBuilder: (context, state, child) => Text(
+                        errorBuilder: (context, state) => Text(
                           state.error.toString(),
                           style: Theme.of(context)
                               .textTheme
                               .headline4
                               ?.copyWith(color: Colors.red),
                         ),
-                        loadingBuilder: (context, state, child) => Text(
+                        loadingBuilder: (context, state) => Text(
                           'Loading...',
                           style: Theme.of(context).textTheme.headline4,
                         ),

@@ -38,6 +38,11 @@ class UnitedState<T extends Object> extends ChangeNotifier {
     bool isLoading = false,
     Object? error,
   }) {
+    debugPrint('UPDATE STATE $runtimeType:');
+    debugPrint('  value:    $_value -> $value');
+    debugPrint('  isLoading $_isLoading -> $isLoading');
+    debugPrint('  error     $_error -> $error');
+
     _value = value;
     _isLoading = isLoading;
     _error = error;

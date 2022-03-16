@@ -27,11 +27,24 @@ class Washington {
   }
 
   void dispatch(Object event) {
+    debugPrint('DISPATCH EVENT -> $event');
     for (final callback in _eventListeners) {
       callback(event);
     }
     for (final state in states) {
       state._dispatchEvent(event);
     }
+  }
+
+  @visibleForTesting
+  void reset() {
+    _eventListeners.clear();
+    states.clear();
+    _instance = null;
+  }
+
+  @visibleForTesting
+  void feedInstance(Washington instance) {
+    _instance = instance;
   }
 }
