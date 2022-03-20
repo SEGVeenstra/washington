@@ -152,7 +152,7 @@ class MyHomePage extends StatelessWidget {
                       const Text(
                         'Current value:',
                       ),
-                      StateBuilder<CounterState>(
+                      StateBuilder<CounterState, int>.single(
                         builder: (context, state) {
                           final String text;
                           if (state.hasError) {
@@ -175,7 +175,7 @@ class MyHomePage extends StatelessWidget {
                       const SizedBox(
                         height: 32,
                       ),
-                      StateValueBuilder<CounterState, int>(
+                      StateBuilder<CounterState, int>(
                         successBuilder: (context, state) => Text(
                           state.value.toString(),
                           style: Theme.of(context).textTheme.headline4,
