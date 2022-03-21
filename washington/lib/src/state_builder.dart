@@ -1,21 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' hide ErrorBuilder;
 import 'package:washington/washington.dart';
 
-typedef SuccessBuilder<TValue> = Widget Function(
-  BuildContext context,
-  _SuccessState<TValue> state,
-);
-
-typedef ErrorBuilder<TValue> = Widget Function(
-  BuildContext context,
-  _ErrorState<TValue> state,
-);
-
-typedef GeneralStateBuilder<TValue> = Widget Function(
-  BuildContext context,
-  _State<TValue> state,
-);
+import 'callbacks.dart';
 
 /// A Widget that allows you to define specific builders for specific states.
 ///
@@ -64,7 +51,7 @@ class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
     if (_generalBuilder != null) {
       return _generalBuilder!.call(
           context,
-          _State(
+          BasicState(
             error: state.error,
             value: state.value as TValue,
             isLoading: state.isLoading,
@@ -77,49 +64,17 @@ class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
       if (state.hasError) {
         return _errorBuilder!.call(
           context,
-          _ErrorState(
+          ErrorState(
               error: state.error!,
               value: state.value as TValue,
               isLoading: state.isLoading),
         );
       } else if (state.isLoading) {
         return _loadingBuilder!
-            .call(context, _SuccessState(value: state.value as TValue));
+            .call(context, SuccessState(value: state.value as TValue));
       }
       return _successBuilder!(
-          context, _SuccessState(value: state.value as TValue));
+          context, SuccessState(value: state.value as TValue));
     }
   }
-}
-
-class _SuccessState<TValue> {
-  final TValue value;
-
-  const _SuccessState({required this.value});
-}
-
-class _ErrorState<TValue> {
-  final TValue value;
-  final Object error;
-  final bool isLoading;
-
-  const _ErrorState({
-    required this.error,
-    required this.value,
-    required this.isLoading,
-  });
-}
-
-class _State<TValue> {
-  final TValue value;
-  final Object? error;
-  final bool isLoading;
-
-  bool get hasError => error != null;
-
-  const _State({
-    required this.error,
-    required this.value,
-    required this.isLoading,
-  });
 }

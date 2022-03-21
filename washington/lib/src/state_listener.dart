@@ -1,25 +1,29 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:washington/washington.dart';
+import 'package:washington/washington.dart' as washington;
 
-class StateListener<T extends UnitedState> extends StatefulWidget {
+import 'callbacks.dart';
+
+/// Listen to state changes
+class StateListener<T extends washington.UnitedState> extends StatefulWidget {
   final Widget child;
-  final void Function(BuildContext context, T state) listener;
-  late final void Function(BuildContext context, UnitedState state) _listenerCallback;
+  late final void Function(BuildContext context, washington.UnitedState state)
+      _listenerCallback;
 
   StateListener({
     required this.child,
-    required this.listener,
+    required StateCallback<T> listener,
     Key? key,
   }) : super(key: key) {
-    _listenerCallback = (context, state) => listener(context, state as T);
+    _listenerCallback = (context, state) => listener;
   }
 
   @override
   _StateListenerState createState() => _StateListenerState<T>();
 }
 
-class _StateListenerState<T extends UnitedState> extends State<StateListener> {
+class _StateListenerState<T extends washington.UnitedState>
+    extends State<StateListener> {
   VoidCallback? _listener;
   T? state;
 

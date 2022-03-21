@@ -8,9 +8,10 @@ import 'package:washington/washington.dart';
 /// makes it easier to remember to use the right [Provider].
 ///
 /// Trying to provide a [UnitedState] with a normal [Provider] would show an assert error.
-class StateProvider<T extends UnitedState<Object>> extends ChangeNotifierProvider<T> {
+class StateProvider<T extends UnitedState<Object>>
+    extends ChangeNotifierProvider<T> {
   StateProvider({
-    required Widget child,
+    required Widget? child,
     required T Function(BuildContext context) create,
     Key? key,
   }) : super(child: child, create: create, key: key);

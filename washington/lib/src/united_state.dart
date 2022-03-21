@@ -2,16 +2,23 @@ part of 'washington.dart';
 
 typedef StateHandler = void Function(Object event);
 
+/// A State object that will receive events dispatched by [Washington].
 class UnitedState<T extends Object> extends ChangeNotifier {
   final _handlers = <Type, StateHandler>{};
   T _value;
+
+  /// The current value of this state.
   T get value => _value;
 
   Object? _error;
+
+  /// Used to indicate that something is wrong with this state.
   Object? get error => _error;
   bool get hasError => _error != null;
 
   bool _isLoading;
+
+  /// Used to indicate if this state is currently loading.
   bool get isLoading => _isLoading;
 
   UnitedState(
@@ -19,7 +26,7 @@ class UnitedState<T extends Object> extends ChangeNotifier {
     bool isLoading = false,
   })  : _value = initialValue,
         _isLoading = isLoading {
-    Washington.instance._add(this);
+    Washington.instance.addListener(_dispatchEvent);
   }
 
   void _dispatchEvent(Object event) {
@@ -27,11 +34,19 @@ class UnitedState<T extends Object> extends ChangeNotifier {
     handler?.call(event);
   }
 
+  /// Make [Washington] dispatch an event globally.
+  ///
+  /// Similar to calling `Washington.instance.dispatch(Event)`.
   @protected
   void dispatch(Object event) {
     Washington.instance.dispatch(event);
   }
 
+  /// Update the state.
+  ///
+  /// Use `value` to set the new value for this state.
+  /// Use `isLoading` to indicate that this state is still busy.
+  /// Use `error` to indicate that something is wrong.
   @protected
   void setState(
     T value, {
@@ -50,15 +65,17 @@ class UnitedState<T extends Object> extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Add a handler to handle a specific event.
   @protected
   void addHandler<Tevent>(void Function(Tevent event) handler) {
     _handlers[Tevent] = (Object e) => handler(e as Tevent);
   }
 
+  /// Clean up this state after use.
   @override
   void dispose() {
     _handlers.clear();
-    Washington.instance._remove(this);
+    Washington.instance.removeListener(_dispatchEvent);
     super.dispose();
   }
 }

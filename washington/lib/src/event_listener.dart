@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:washington/washington.dart';
+import 'package:washington/washington.dart' as washington;
 
 /// The EventListener is a convinient
 class EventListener extends StatefulWidget {
@@ -23,13 +23,13 @@ class _EventListenerState extends State<EventListener> {
 
   @override
   void initState() {
-    Washington.instance.addListener(_callback);
+    washington.Washington.instance.addListener(_callback);
     super.initState();
   }
 
   @override
   void dispose() {
-    Washington.instance.removeListener(_callback);
+    washington.Washington.instance.removeListener(_callback);
     super.dispose();
   }
 
