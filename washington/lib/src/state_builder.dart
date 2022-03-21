@@ -21,13 +21,13 @@ import 'callbacks.dart';
 class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
   final SuccessBuilder<TValue>? _successBuilder;
   final ErrorBuilder<TValue>? _errorBuilder;
-  final SuccessBuilder<TValue>? _loadingBuilder;
+  final LoadingBuilder<TValue>? _loadingBuilder;
   final GeneralStateBuilder<TValue>? _generalBuilder;
 
   const StateBuilder({
     required SuccessBuilder<TValue> successBuilder,
     ErrorBuilder<TValue>? errorBuilder,
-    SuccessBuilder<TValue>? loadingBuilder,
+    LoadingBuilder<TValue>? loadingBuilder,
     Key? key,
   })  : _generalBuilder = null,
         _errorBuilder = errorBuilder,
@@ -71,7 +71,7 @@ class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
         );
       } else if (state.isLoading) {
         return _loadingBuilder!
-            .call(context, SuccessState(value: state.value as TValue));
+            .call(context, LoadingState(value: state.value as TValue));
       }
       return _successBuilder!(
           context, SuccessState(value: state.value as TValue));
