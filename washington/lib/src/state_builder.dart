@@ -7,6 +7,11 @@ typedef SuccessBuilder<TValue> = Widget Function(
   _SuccessState<TValue> state,
 );
 
+typedef LoadingBuilder<TValue> = Widget Function(
+  BuildContext context,
+  _LoadingState<TValue> state,
+);
+
 typedef ErrorBuilder<TValue> = Widget Function(
   BuildContext context,
   _ErrorState<TValue> state,
@@ -34,13 +39,13 @@ typedef GeneralStateBuilder<TValue> = Widget Function(
 class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
   final SuccessBuilder<TValue>? _successBuilder;
   final ErrorBuilder<TValue>? _errorBuilder;
-  final SuccessBuilder<TValue>? _loadingBuilder;
+  final LoadingBuilder<TValue>? _loadingBuilder;
   final GeneralStateBuilder<TValue>? _generalBuilder;
 
   const StateBuilder({
     required SuccessBuilder<TValue> successBuilder,
     ErrorBuilder<TValue>? errorBuilder,
-    SuccessBuilder<TValue>? loadingBuilder,
+    LoadingBuilder<TValue>? loadingBuilder,
     Key? key,
   })  : _generalBuilder = null,
         _errorBuilder = errorBuilder,
@@ -77,17 +82,12 @@ class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
       if (state.hasError) {
         return _errorBuilder!.call(
           context,
-          _ErrorState(
-              error: state.error!,
-              value: state.value as TValue,
-              isLoading: state.isLoading),
+          _ErrorState(error: state.error!, value: state.value as TValue, isLoading: state.isLoading),
         );
       } else if (state.isLoading) {
-        return _loadingBuilder!
-            .call(context, _SuccessState(value: state.value as TValue));
+        return _loadingBuilder!.call(context, _LoadingState(value: state.value as TValue));
       }
-      return _successBuilder!(
-          context, _SuccessState(value: state.value as TValue));
+      return _successBuilder!(context, _SuccessState(value: state.value as TValue));
     }
   }
 }
@@ -96,6 +96,12 @@ class _SuccessState<TValue> {
   final TValue value;
 
   const _SuccessState({required this.value});
+}
+
+class _LoadingState<TValue> {
+  final TValue value;
+
+  const _LoadingState({required this.value});
 }
 
 class _ErrorState<TValue> {
