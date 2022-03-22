@@ -2,7 +2,25 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart' hide ErrorBuilder;
 import 'package:washington/washington.dart';
 
-import 'callbacks.dart';
+typedef SuccessBuilder<TValue> = Widget Function(
+  BuildContext context,
+  SuccessState<TValue> state,
+);
+
+typedef LoadingBuilder<TValue> = Widget Function(
+  BuildContext context,
+  LoadingState<TValue> state,
+);
+
+typedef ErrorBuilder<TValue> = Widget Function(
+  BuildContext context,
+  ErrorState<TValue> state,
+);
+
+typedef GeneralStateBuilder<TValue> = Widget Function(
+  BuildContext context,
+  BasicState<TValue> state,
+);
 
 /// A Widget that allows you to define specific builders for specific states.
 ///

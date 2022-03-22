@@ -138,8 +138,8 @@ class MyHomePage extends StatelessWidget {
                       content: Text('A limit has been reached!')));
                 }
               },
-              child: StateListener<CounterState>(
-                listener: (context, state) {
+              child: StateListener<CounterState, int>(
+                successListener: (context, state) {
                   // We can trigger events based on state changes
                   if (state.value >= 7) {
                     Washington.instance.dispatch(CounterResetPressed());
