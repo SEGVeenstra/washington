@@ -93,63 +93,6 @@ class _StateListenerState<US extends washington.UnitedState<V>,
     return widget.child;
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   if (_listener != null) {
-  //     stateRef?.removeListener(_listener!);
-  //   }
-
-  //   final state = context.read<T>();
-  //   stateRef = state;
-
-  //   if (widget.listener != null) {
-  //     _listener = () {
-  //       (widget as StateListener<T, TValue>).listener!.call(
-  //             context,
-  //             washington.BasicState<TValue>(
-  //               error: state.error,
-  //               value: state.value,
-  //               isLoading: state.isLoading,
-  //             ),
-  //           );
-  //     };
-  //   } else {
-  //     assert(!state.hasError || state.hasError && widget.errorListener != null,
-  //         'If you are planning on setting \'error\' you must provide an \'errorListener\'');
-  //     assert(
-  //         !state.isLoading || state.isLoading && widget.loadingListener != null,
-  //         'If you are planning on setting \'isLoading\' you must provide an \'loadingListener\'');
-
-  //     _listener = () {
-  //       if (state.hasError) {
-  //         widget.errorListener!.call(
-  //           context,
-  //           washington.ErrorState<TValue>(
-  //             value: state.value,
-  //             isLoading: state.isLoading,
-  //             error: state.error!,
-  //           ),
-  //         );
-  //       } else if (state.isLoading) {
-  //         widget.loadingListener!.call(
-  //           context,
-  //           washington.LoadingState<TValue>(
-  //             value: state.value,
-  //           ),
-  //         );
-  //       } else {
-  //         widget.successListener!.call(
-  //           context,
-  //           washington.SuccessState<TValue>(value: state.value),
-  //         );
-  //       }
-  //     };
-  //   }
-
-  //   state.addListener(_listener!);
-  //   return widget.child;
-  // }
-
   @override
   void dispose() {
     _removeListener();
