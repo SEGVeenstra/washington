@@ -53,6 +53,13 @@ class UnitedState<T extends Object> extends ChangeNotifier {
     bool isLoading = false,
     Object? error,
   }) {
+    // TODO: Experimental
+    if (value == _value && error == _error && isLoading == _isLoading) {
+      debugPrint(
+          'UPDATE STATE $runtimeType has been ignored, state was equal!\nThis is an experimental feature.');
+      return;
+    }
+
     debugPrint('UPDATE STATE $runtimeType:');
     debugPrint('  value:    $_value -> $value');
     debugPrint('  isLoading $_isLoading -> $isLoading');
