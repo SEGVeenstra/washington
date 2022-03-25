@@ -1,26 +1,24 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide State;
+import 'package:flutter/widgets.dart' as widgets show State;
 import 'package:provider/provider.dart';
-import 'package:washington/washington.dart' as washington;
+import 'package:washington/washington.dart';
 
-typedef UnitedStateListener<T> = void Function(
-    BuildContext context, washington.BasicState<T> state);
+typedef UnitedStateListener<T> = void Function(BuildContext context, State<T> state);
 
-typedef SuccessListener<T> = void Function(
-    BuildContext context, washington.SuccessState<T> state);
+typedef SuccessListener<T> = void Function(BuildContext context, SuccessState<T> state);
 
 typedef LoadingListener<T> = void Function(
   BuildContext context,
-  washington.LoadingState<T> state,
+  LoadingState<T> state,
 );
 
 typedef ErrorListener<T> = void Function(
   BuildContext context,
-  washington.ErrorState<T> state,
+  ErrorState<T> state,
 );
 
 /// Listen to state changes
-class StateListener<US extends washington.UnitedState<V>, V extends Object>
-    extends StatefulWidget {
+class StateListener<US extends UnitedState<V>, V extends Object> extends StatefulWidget {
   final Widget child;
   final UnitedStateListener<V>? listener;
   final SuccessListener<V>? successListener;
@@ -49,8 +47,7 @@ class StateListener<US extends washington.UnitedState<V>, V extends Object>
   _StateListenerState<US, V> createState() => _StateListenerState<US, V>();
 }
 
-class _StateListenerState<US extends washington.UnitedState<V>,
-    V extends Object> extends State<StateListener<US, V>> {
+class _StateListenerState<US extends UnitedState<V>, V extends Object> extends widgets.State<StateListener<US, V>> {
   VoidCallback? _listener;
 
   late US _unitedState;
@@ -104,26 +101,22 @@ class _StateListenerState<US extends washington.UnitedState<V>,
       if (widget.listener != null) {
         widget.listener!.call(
           context,
-          washington.BasicState<V>(
+          State<V>(
             error: _unitedState.error,
             value: _unitedState.value,
             isLoading: _unitedState.isLoading,
           ),
         );
       } else {
-        assert(
-            !_unitedState.hasError ||
-                _unitedState.hasError && widget.errorListener != null,
+        assert(!_unitedState.hasError || _unitedState.hasError && widget.errorListener != null,
             'If you are planning on setting \'error\' you must provide an \'errorListener\'');
-        assert(
-            !_unitedState.isLoading ||
-                _unitedState.isLoading && widget.loadingListener != null,
+        assert(!_unitedState.isLoading || _unitedState.isLoading && widget.loadingListener != null,
             'If you are planning on setting \'isLoading\' you must provide an \'loadingListener\'');
 
         if (_unitedState.hasError) {
           widget.errorListener!.call(
             context,
-            washington.ErrorState<V>(
+            ErrorState<V>(
               value: _unitedState.value,
               isLoading: _unitedState.isLoading,
               error: _unitedState.error!,
@@ -132,14 +125,14 @@ class _StateListenerState<US extends washington.UnitedState<V>,
         } else if (_unitedState.isLoading) {
           widget.loadingListener!.call(
             context,
-            washington.LoadingState<V>(
+            LoadingState<V>(
               value: _unitedState.value,
             ),
           );
         } else {
           widget.successListener!.call(
             context,
-            washington.SuccessState<V>(value: _unitedState.value),
+            SuccessState<V>(value: _unitedState.value),
           );
         }
       }

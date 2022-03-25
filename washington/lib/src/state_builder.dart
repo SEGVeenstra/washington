@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide State;
 import 'package:provider/provider.dart' hide ErrorBuilder;
 import 'package:washington/washington.dart';
 
@@ -19,7 +19,7 @@ typedef ErrorBuilder<TValue> = Widget Function(
 
 typedef GeneralStateBuilder<TValue> = Widget Function(
   BuildContext context,
-  BasicState<TValue> state,
+  State<TValue> state,
 );
 
 /// A Widget that allows you to define specific builders for specific states.
@@ -69,7 +69,7 @@ class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
     if (_generalBuilder != null) {
       return _generalBuilder!.call(
           context,
-          BasicState(
+          State(
             error: state.error,
             value: state.value as TValue,
             isLoading: state.isLoading,
@@ -82,17 +82,12 @@ class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
       if (state.hasError) {
         return _errorBuilder!.call(
           context,
-          ErrorState(
-              error: state.error!,
-              value: state.value as TValue,
-              isLoading: state.isLoading),
+          ErrorState(error: state.error!, value: state.value as TValue, isLoading: state.isLoading),
         );
       } else if (state.isLoading) {
-        return _loadingBuilder!
-            .call(context, LoadingState(value: state.value as TValue));
+        return _loadingBuilder!.call(context, LoadingState(value: state.value as TValue));
       }
-      return _successBuilder!(
-          context, SuccessState(value: state.value as TValue));
+      return _successBuilder!(context, SuccessState(value: state.value as TValue));
     }
   }
 }
