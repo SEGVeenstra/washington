@@ -22,14 +22,14 @@ class ErrorState<TValue> {
   });
 }
 
-class SimpleState<TValue> {
+class State<TValue> {
   final TValue value;
   final Object? error;
   final bool isLoading;
 
   bool get hasError => error != null;
 
-  const SimpleState({
+  const State({
     required this.error,
     required this.value,
     required this.isLoading,

@@ -27,11 +27,13 @@ class StateListener<US extends UnitedState<V>, V extends Object> extends Statefu
 
   const StateListener({
     required this.child,
-    required this.successListener,
+    this.successListener,
     this.loadingListener,
     this.errorListener,
     Key? key,
-  })  : listener = null,
+  })  : assert(
+            successListener != null || loadingListener != null || errorListener != null, 'Add atleast one listener!'),
+        listener = null,
         super(key: key);
 
   const StateListener.single({
@@ -108,11 +110,6 @@ class _StateListenerState<US extends UnitedState<V>, V extends Object> extends w
           ),
         );
       } else {
-        assert(!_unitedState.hasError || _unitedState.hasError && widget.errorListener != null,
-            'If you are planning on setting \'error\' you must provide an \'errorListener\'');
-        assert(!_unitedState.isLoading || _unitedState.isLoading && widget.loadingListener != null,
-            'If you are planning on setting \'isLoading\' you must provide an \'loadingListener\'');
-
         if (_unitedState.hasError) {
           widget.errorListener!.call(
             context,
