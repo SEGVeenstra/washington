@@ -55,9 +55,10 @@ To use `Washington` in your Flutter application you can use a set of conviniet w
 
 ### StateProvider
 
-States can be scoped in the _widget tree_ by using `StateProviders`.
+States can be scoped in the _widget tree_ by using `StateProvider`s.
 
-...
+When you need to add multiple `StateProvider`s add the same level, considder using 
+a `MultiStateProvider`. This makes your code more readable.
 
 ### StateBuilder
 
@@ -67,12 +68,12 @@ To build the UI based on the current state you can use `StateBuilder`.
 
 ### Statelistener
 
-When you need to trigger one-off actions (like navigating or showing a snackbar) based on state changes, you can use the 'StateListener'. 
+When you need to trigger one-off actions (like navigating or showing a snackbar) based on state changes, you can use the `StateListener`. 
 
 ...
 
-### EventListen
+### EventListener
 
-If you want to trigger one-off actions but based on the events being dispatched, instead of a state change, you can use the EventListener.
+If you want to trigger one-off actions based on the events being dispatched, instead of a state change, you can use the `EventListener`.
 
 ...
