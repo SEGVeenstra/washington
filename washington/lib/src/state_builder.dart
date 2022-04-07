@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart' hide State;
 import 'package:provider/provider.dart' hide ErrorBuilder;
 import 'package:washington/washington.dart';
 
+import 'states.dart';
+
 typedef SuccessBuilder<TValue> = Widget Function(
   BuildContext context,
   SuccessState<TValue> state,
