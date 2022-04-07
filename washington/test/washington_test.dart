@@ -6,7 +6,7 @@ void main() {
     final counterState = CounterState();
 
     counterState.addListener(() {
-      print(counterState.value);
+      // no-op
     });
 
     Washington.instance.dispatch(Increment());

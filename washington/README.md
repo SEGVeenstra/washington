@@ -11,7 +11,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-The Non-Nonsense Event Driven State Management solution for Flutter.
+The No-Nonsense Event Driven State Management solution for Flutter.
 
 ## Washington
 

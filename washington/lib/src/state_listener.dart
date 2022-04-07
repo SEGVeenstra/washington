@@ -141,6 +141,6 @@ class _StateListenerState<US extends UnitedState<V>, V extends Object> extends w
 
   void _removeListener() {
     _unitedState.removeListener(_listener!);
-    _listener == null;
+    _listener = null;
   }
 }
