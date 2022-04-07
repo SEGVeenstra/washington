@@ -12,7 +12,6 @@ This package was born from a personal desire for a light-weight state-management
 Creating my own state-managment solution allowed me to adapt to my personal needs and preferences that I've developed over my years working with Flutter.
 
 When one would try this state-management solution, one will find traces of other well-know solutions that have inspired me.
-
 ```
 
 ## Washington
@@ -23,7 +22,7 @@ When one would try this state-management solution, one will find traces of other
 
 > If you are against the use of singletons, you can take it up with my lawyer.
 
-When you want to grab hold of the `Washinton` _instance_ you can use the static `instance` property.
+When you want to grab hold of the `Washington` _instance_ you can use the static `instance` property.
 
 ```dart
 Washington.instance.dispatch(SomeEvent());
