@@ -3,9 +3,11 @@ import 'package:flutter/widgets.dart' as widgets show State;
 import 'package:provider/provider.dart';
 import 'package:washington/washington.dart';
 
-typedef UnitedStateListener<T> = void Function(BuildContext context, State<T> state);
+typedef UnitedStateListener<T> = void Function(
+    BuildContext context, State<T> state);
 
-typedef SuccessListener<T> = void Function(BuildContext context, SuccessState<T> state);
+typedef SuccessListener<T> = void Function(
+    BuildContext context, SuccessState<T> state);
 
 typedef LoadingListener<T> = void Function(
   BuildContext context,
@@ -18,7 +20,8 @@ typedef ErrorListener<T> = void Function(
 );
 
 /// Listen to state changes
-class StateListener<US extends UnitedState<V>, V extends Object> extends StatefulWidget {
+class StateListener<US extends UnitedState<V>, V extends Object>
+    extends StatefulWidget {
   final Widget child;
   final UnitedStateListener<V>? listener;
   final SuccessListener<V>? successListener;
@@ -32,7 +35,10 @@ class StateListener<US extends UnitedState<V>, V extends Object> extends Statefu
     this.errorListener,
     Key? key,
   })  : assert(
-            successListener != null || loadingListener != null || errorListener != null, 'Add atleast one listener!'),
+            successListener != null ||
+                loadingListener != null ||
+                errorListener != null,
+            'Add atleast one listener!'),
         listener = null,
         super(key: key);
 
@@ -49,7 +55,8 @@ class StateListener<US extends UnitedState<V>, V extends Object> extends Statefu
   _StateListenerState<US, V> createState() => _StateListenerState<US, V>();
 }
 
-class _StateListenerState<US extends UnitedState<V>, V extends Object> extends widgets.State<StateListener<US, V>> {
+class _StateListenerState<US extends UnitedState<V>, V extends Object>
+    extends widgets.State<StateListener<US, V>> {
   VoidCallback? _listener;
 
   late US _unitedState;
@@ -111,7 +118,7 @@ class _StateListenerState<US extends UnitedState<V>, V extends Object> extends w
         );
       } else {
         if (_unitedState.hasError) {
-          widget.errorListener!.call(
+          widget.errorListener?.call(
             context,
             ErrorState<V>(
               value: _unitedState.value,
@@ -120,14 +127,14 @@ class _StateListenerState<US extends UnitedState<V>, V extends Object> extends w
             ),
           );
         } else if (_unitedState.isLoading) {
-          widget.loadingListener!.call(
+          widget.loadingListener?.call(
             context,
             LoadingState<V>(
               value: _unitedState.value,
             ),
           );
         } else {
-          widget.successListener!.call(
+          widget.successListener?.call(
             context,
             SuccessState<V>(value: _unitedState.value),
           );
