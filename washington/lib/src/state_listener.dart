@@ -5,9 +5,11 @@ import 'package:washington/washington.dart';
 
 import 'states.dart';
 
-typedef UnitedStateListener<T> = void Function(BuildContext context, State<T> state);
+typedef UnitedStateListener<T> = void Function(
+    BuildContext context, State<T> state);
 
-typedef SuccessListener<T> = void Function(BuildContext context, SuccessState<T> state);
+typedef SuccessListener<T> = void Function(
+    BuildContext context, SuccessState<T> state);
 
 typedef LoadingListener<T> = void Function(
   BuildContext context,
@@ -20,7 +22,8 @@ typedef ErrorListener<T> = void Function(
 );
 
 /// Listen to state changes
-class StateListener<US extends UnitedState<V>, V extends Object> extends StatefulWidget {
+class StateListener<US extends UnitedState<V>, V extends Object>
+    extends StatefulWidget {
   final Widget child;
   final UnitedStateListener<V>? listener;
   final SuccessListener<V>? successListener;
@@ -34,7 +37,10 @@ class StateListener<US extends UnitedState<V>, V extends Object> extends Statefu
     this.errorListener,
     Key? key,
   })  : assert(
-            successListener != null || loadingListener != null || errorListener != null, 'Add atleast one listener!'),
+            successListener != null ||
+                loadingListener != null ||
+                errorListener != null,
+            'Add atleast one listener!'),
         listener = null,
         super(key: key);
 
@@ -51,7 +57,8 @@ class StateListener<US extends UnitedState<V>, V extends Object> extends Statefu
   _StateListenerState<US, V> createState() => _StateListenerState<US, V>();
 }
 
-class _StateListenerState<US extends UnitedState<V>, V extends Object> extends widgets.State<StateListener<US, V>> {
+class _StateListenerState<US extends UnitedState<V>, V extends Object>
+    extends widgets.State<StateListener<US, V>> {
   VoidCallback? _listener;
 
   late US _unitedState;

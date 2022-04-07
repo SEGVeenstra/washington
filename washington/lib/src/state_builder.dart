@@ -84,12 +84,17 @@ class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
       if (state.hasError) {
         return _errorBuilder!.call(
           context,
-          ErrorState(error: state.error!, value: state.value as TValue, isLoading: state.isLoading),
+          ErrorState(
+              error: state.error!,
+              value: state.value as TValue,
+              isLoading: state.isLoading),
         );
       } else if (state.isLoading) {
-        return _loadingBuilder!.call(context, LoadingState(value: state.value as TValue));
+        return _loadingBuilder!
+            .call(context, LoadingState(value: state.value as TValue));
       }
-      return _successBuilder!(context, SuccessState(value: state.value as TValue));
+      return _successBuilder!(
+          context, SuccessState(value: state.value as TValue));
     }
   }
 }
