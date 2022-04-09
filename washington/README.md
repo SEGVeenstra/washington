@@ -1,26 +1,24 @@
 The No-Nonsense Event Driven State Management solution for Flutter.
 
-> WARNING: This package is __not__ ready for __production__ projects.
+> __WARNING__: This package is __not__ ready for __production__ projects.
 > 
 >Feel free to try it prototypes or experiments.
 
 ```none
 DECLARATION OF INDEPENDENCE
 
-This package was born from a personal desire for a light-weight state-management solution.
+This package was born from a personal desire for a light-weight state management solution.
 
-Creating my own state-managment solution allowed me to adapt to my personal needs and preferences that I've developed over my years working with Flutter.
+Creating my own state managment solution allowed me to adapt to my personal needs and preferences that I've developed over my years working with Flutter.
 
-When one would try this state-management solution, one will find traces of other well-know solutions that have inspired me.
+When one would try this state management solution, one will find traces of other well-know solutions that have inspired me.
 ```
 
-## Washington
+# Washington
 
-`Washington` (`class`) is the capitol of your state-management. You will use `Washington` to `dispath` events for your application.
+`Washington` (`class`) is the capitol of your state management. You will use `Washington` to `dispath` events for your application.
 
 `Washington` is implimented as a _singleton_ allowing you to easily access it from anywhere in your application.
-
-> If you are against the use of singletons, you can take it up with my lawyer.
 
 When you want to grab hold of the `Washington` _instance_ you can use the static `instance` property.
 
@@ -28,11 +26,11 @@ When you want to grab hold of the `Washington` _instance_ you can use the static
 Washington.instance.dispatch(SomeEvent());
 ```
 
-### UnitedStates
+## UnitedStates
 
-You use `UnitedState` objects to manager your application's `state`.
+You will use `UnitedState` objects to manage your application's `state`.
 
-To create these objects, all you have to do is extend the `UnitedState` class and add handlers for all the events you want your `UnitedState` to act upon.
+To create these objects, all you have to do is _extend_ the `UnitedState` class and add handlers for all the events you want your `UnitedState` to act upon.
 
 Each `UnitedState` should be responsible for a specific _area_ or _feature_ of your app. For example, you could have a `UserState`, `ProductsState` and `SettingsState`.
 
@@ -48,7 +46,7 @@ class UserState extends UnitedState<User?> {
 
 > __ProTip__: To keep the constructor nice and clean it is recommended to create private methods in the class and add them as a handler.
 
-#### SetState
+### SetState
 
 To update the state you use the `setState` function. You can set a new `value`, and you can also set the `isLoading` and `error` properties.
 
@@ -60,7 +58,7 @@ setState(
 );
 ```
 
-### Events
+## Events
 
 Events are the things that will trigger change in your application.
 
@@ -96,11 +94,11 @@ class SettingsState extends UnitedState<Settings?> {
 >
 > This way you could clean up after a user logs out, or navigate to the _LoginPage_.
 
-## Widgets
+# Widgets
 
 When using `Washington` in your Flutter application you can use a set of convenient widgets that help you build or trigger UI elements based on events and state changes.
 
-### StateProvider
+## StateProvider
 
 States can be scoped in the _widget tree_ by using `StateProvider`s.
 
@@ -122,13 +120,13 @@ MultiStateProvider(
 )
 ```
 
-### StateBuilder
+## StateBuilder
 
 To build the UI based on the state you can use `StateBuilder`s.
 
 There are two constructors you can use, both with their own use-case.
 
-#### Default constructor
+### Default constructor
 The default constructor is ideal for when you want to show totally different widgets based on the state.
 
 It gives you three seperate builder functions for success, loading and error states.
@@ -143,7 +141,7 @@ StateBuilder<AuthState,User?>(
 )
 ```
 
-#### StateBuilder.single
+### StateBuilder.single
 When you want to build a widget that has support for different states you might want to use the `StateBuilder.single` constructor. This constructor gives you more control over what to build.
 
 ```
@@ -156,14 +154,40 @@ StateBuilder<AuthState,User?>.single(
 )
 ```
 
-### Statelistener
+## Statelistener
 
 When you need to trigger one-off actions (like navigating or showing a snackbar) based on state changes, you can use the `StateListener`. 
 
-...
+Just like with the `StateBuilder` are there two constructors to choose from.
 
-### EventListener
+### Default constructor
+
+With the default constructor you can choose specific listeners.
+
+```dart
+StateListener<AuthState,User?>(
+    successListener: (context, state) => ...,
+    loadingListener: (context, state) => ...,
+    errorBuilder: (context, state) => ...,
+)
+```
+
+### StateListener.single
+
+The `.single` constructor gives you just a single constructor.
+
+```dart
+StateListener<AuthState,User?>.single(
+    listener: (context, state) => ...,
+)
+```
+
+## EventListener
 
 If you want to trigger one-off actions based on the events being dispatched, instead of a state change, you can use the `EventListener`.
 
-...
+```dart
+EventListener(
+    listener: (context, event) => ...,
+)
+```
