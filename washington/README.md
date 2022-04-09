@@ -136,7 +136,7 @@ It gives you three seperate builder functions for success, loading and error sta
 
 Only the `successBuilder` is required, the other two are optional. However, when `isLoading` is set to `true` or `error` is not `null`, and the corresponding builder has not been provided, an assertion error will be thrown. 
 
-```
+```dart
 StateBuilder<AuthState,User?>(
     successBuilder: (context, user) => Profile(user),
     loadingBuilder: (context) => Loading(),
@@ -147,7 +147,7 @@ StateBuilder<AuthState,User?>(
 ### StateBuilder.single
 When you want to build a widget that has support for different states you might want to use the `StateBuilder.single` constructor. This constructor gives you more control over what to build.
 
-```
+```dart
 StateBuilder<AuthState,User?>.single(
     builder: (context, state) => ProfilePage(
         isLoading: state.isLoading,
@@ -157,7 +157,7 @@ StateBuilder<AuthState,User?>.single(
 )
 ```
 
-## Statelistener
+## StateListener
 
 When you need to trigger one-off actions (like navigating or showing a snackbar) based on state changes, you can use the `StateListener`. 
 
