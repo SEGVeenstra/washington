@@ -7,11 +7,14 @@ The No-Nonsense Event Driven State Management solution for Flutter.
 ```none
 DECLARATION OF INDEPENDENCE
 
-This package was born from a personal desire for a light-weight state management solution.
+This package was born from a personal desire for a light-weight state
+management solution.
 
-Creating my own state managment solution allowed me to adapt to my personal needs and preferences that I've developed over my years working with Flutter.
+Creating my own state managment solution allowed me to adapt to my personal
+needs and preferences that I've developed over my years working with Flutter.
 
-When one would try this state management solution, one will find traces of other well-know solutions that have inspired me.
+When one would try this state management solution, one will find traces of
+other well-know solutions that have inspired me.
 ```
 
 # Washington
