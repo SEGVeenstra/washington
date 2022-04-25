@@ -32,25 +32,38 @@ class StateListener<US extends UnitedState<V>, V extends Object>
 
   const StateListener({
     required this.child,
-    this.successListener,
-    this.loadingListener,
-    this.errorListener,
-    Key? key,
-  })  : assert(
-            successListener != null ||
-                loadingListener != null ||
-                errorListener != null,
-            'Add atleast one listener!'),
-        listener = null,
-        super(key: key);
-
-  const StateListener.single({
-    required this.child,
     required this.listener,
     Key? key,
   })  : successListener = null,
         loadingListener = null,
         errorListener = null,
+        super(key: key);
+
+  const StateListener.error({
+    required this.child,
+    required this.errorListener,
+    Key? key,
+  })  : successListener = null,
+        loadingListener = null,
+        listener = null,
+        super(key: key);
+
+  const StateListener.loading({
+    required this.child,
+    required this.loadingListener,
+    Key? key,
+  })  : successListener = null,
+        errorListener = null,
+        listener = null,
+        super(key: key);
+
+  const StateListener.success({
+    required this.child,
+    required this.successListener,
+    Key? key,
+  })  : errorListener = null,
+        loadingListener = null,
+        listener = null,
         super(key: key);
 
   @override
@@ -109,38 +122,35 @@ class _StateListenerState<US extends UnitedState<V>, V extends Object>
 
   void _addListener() {
     _listener = () {
-      if (widget.listener != null) {
-        widget.listener!.call(
+      widget.listener?.call(
+        context,
+        State<V>(
+          error: _unitedState.error,
+          value: _unitedState.value,
+          isLoading: _unitedState.isLoading,
+        ),
+      );
+      if (_unitedState.hasError) {
+        widget.errorListener?.call(
           context,
-          State<V>(
-            error: _unitedState.error,
+          ErrorState<V>(
             value: _unitedState.value,
             isLoading: _unitedState.isLoading,
+            error: _unitedState.error!,
+          ),
+        );
+      } else if (_unitedState.isLoading) {
+        widget.loadingListener?.call(
+          context,
+          LoadingState<V>(
+            value: _unitedState.value,
           ),
         );
       } else {
-        if (_unitedState.hasError) {
-          widget.errorListener?.call(
-            context,
-            ErrorState<V>(
-              value: _unitedState.value,
-              isLoading: _unitedState.isLoading,
-              error: _unitedState.error!,
-            ),
-          );
-        } else if (_unitedState.isLoading) {
-          widget.loadingListener?.call(
-            context,
-            LoadingState<V>(
-              value: _unitedState.value,
-            ),
-          );
-        } else {
-          widget.successListener?.call(
-            context,
-            SuccessState<V>(value: _unitedState.value),
-          );
-        }
+        widget.successListener?.call(
+          context,
+          SuccessState<V>(value: _unitedState.value),
+        );
       }
     };
     _unitedState.addListener(_listener!);

@@ -141,7 +141,7 @@ class MyHomePage extends StatelessWidget {
                       content: Text('A limit has been reached!')));
                 }
               },
-              child: StateListener<CounterState, int>(
+              child: StateListener<CounterState, int>.success(
                 successListener: (context, state) {
                   // We can trigger events based on state changes
                   if (state.value >= 7) {
@@ -178,23 +178,6 @@ class MyHomePage extends StatelessWidget {
                       const SizedBox(
                         height: 32,
                       ),
-                      StateBuilder<CounterState, int>(
-                        successBuilder: (context, state) => Text(
-                          state.value.toString(),
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        errorBuilder: (context, state) => Text(
-                          state.error.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline4
-                              ?.copyWith(color: Colors.red),
-                        ),
-                        loadingBuilder: (context, state) => Text(
-                          'Loading...',
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      )
                     ],
                   ),
                 ),

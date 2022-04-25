@@ -159,29 +159,45 @@ StateBuilder<AuthState,User?>.single(
 
 ## StateListener
 
-When you need to trigger one-off actions (like navigating or showing a snackbar) based on state changes, you can use the `StateListener`. 
+When you need to trigger one-off actions (like navigating or showing a snackbar) 
+based on state changes, you can use the `StateListener`. 
 
-Just like with the `StateBuilder` are there two constructors to choose from.
+`StateListener` differs a little from `StateBuilder`.
+
+It has a default constructor and _three_ named constructors.
 
 ### Default constructor
 
-With the default constructor you can choose specific listeners.
+The default constructor requires a `builder` function that will be called on every 
+state change. The state that's passed to this builder will contain the `value`, 
+`isLoading` and `error` fields.
 
 ```dart
 StateListener<AuthState,User?>(
-    successListener: (context, state) => ...,
-    loadingListener: (context, state) => ...,
-    errorBuilder: (context, state) => ...,
+    listener: (context, state) => ...,
 )
 ```
 
-### StateListener.single
+### Named constructors
 
-The `.single` constructor gives you just a single constructor.
+The named constructors are only called in specific cases.
 
 ```dart
-StateListener<AuthState,User?>.single(
-    listener: (context, state) => ...,
+StateListener<AuthState,User?>.error(
+    // Will only be called when the state has an error
+    errorListener: (context, state) => ...,
+)
+
+StateListener<AuthState,User?>.loading(
+    // Will only be called when there is no error,
+    // and loading is set to true.
+    loadingListener: (context, state) => ...,
+)
+
+StateListener<AuthState,User?>.success(
+    // Will only be called when there is no error,
+    // and loading is set to false.
+    successListener: (context, state) => ...,
 )
 ```
 
