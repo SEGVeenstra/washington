@@ -130,30 +130,31 @@ To build the UI based on the state you can use `StateBuilder`s.
 There are two constructors you can use, both with their own use-case.
 
 ### Default constructor
-The default constructor is ideal for when you want to show totally different widgets based on the state.
-
-It gives you three seperate builder functions for success, loading and error states.
-
-Only the `successBuilder` is required, the other two are optional. However, when `isLoading` is set to `true` or `error` is not `null`, and the corresponding builder has not been provided, an assertion error will be thrown. 
+When you want to build a widget that has support for different states you might want to use the default constructor.
+The `builder` will be called on every state change.
 
 ```dart
 StateBuilder<AuthState,User?>(
-    successBuilder: (context, user) => Profile(user),
-    loadingBuilder: (context) => Loading(),
-    errorBuilder: (context, error) => Error(error),
-)
-```
-
-### StateBuilder.single
-When you want to build a widget that has support for different states you might want to use the `StateBuilder.single` constructor. This constructor gives you more control over what to build.
-
-```dart
-StateBuilder<AuthState,User?>.single(
     builder: (context, state) => ProfilePage(
         isLoading: state.isLoading,
         user: state.value,
         error: state.error,
     ),
+)
+```
+
+### StateBuilder.separate
+The `separate` constructor is ideal for when you want to show totally different widgets based on the state.
+
+It gives you three seperate builder functions for _success_, _loading_ and _error_ states.
+
+Only the `successBuilder` is required, the other two are optional. However, when `isLoading` is set to `true` or `error` is not `null`, and the corresponding builder has not been provided, an assertion error will be thrown. 
+
+```dart
+StateBuilder<AuthState,User?>.separate(
+    successBuilder: (context, user) => Profile(user),
+    loadingBuilder: (context) => Loading(),
+    errorBuilder: (context, error) => Error(error),
 )
 ```
 
@@ -168,9 +169,7 @@ It has a default constructor and _three_ named constructors.
 
 ### Default constructor
 
-The default constructor requires a `builder` function that will be called on every 
-state change. The state that's passed to this builder will contain the `value`, 
-`isLoading` and `error` fields.
+The default constructor requires a `builder` function that will be called on every state change. The state that's passed to this builder will contain the `value`, `isLoading` and `error` fields.
 
 ```dart
 StateListener<AuthState,User?>(
