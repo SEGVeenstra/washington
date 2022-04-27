@@ -1,3 +1,8 @@
+## 0.0.1-dev.4
+
+* Change StateBuilder API
+* Update docs.
+
 ## 0.0.1-dev.3
 
 * Change StateListener API
