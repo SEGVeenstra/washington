@@ -9,16 +9,16 @@ typedef UnitedStateListener<T> = void Function(
     BuildContext context, State<T> state);
 
 typedef SuccessListener<T> = void Function(
-    BuildContext context, SuccessState<T> state);
+    BuildContext context, ValueState<T> state);
 
 typedef LoadingListener<T> = void Function(
   BuildContext context,
-  LoadingState<T> state,
+  ValueState<T> state,
 );
 
 typedef ErrorListener<T> = void Function(
   BuildContext context,
-  ErrorState<T> state,
+  State<T> state,
 );
 
 /// Listen to state changes
@@ -124,32 +124,22 @@ class _StateListenerState<US extends UnitedState<V>, V extends Object>
     _listener = () {
       widget.listener?.call(
         context,
-        State<V>(
-          error: _unitedState.error,
-          value: _unitedState.value,
-          isLoading: _unitedState.isLoading,
-        ),
+        _unitedState,
       );
       if (_unitedState.hasError) {
         widget.errorListener?.call(
           context,
-          ErrorState<V>(
-            value: _unitedState.value,
-            isLoading: _unitedState.isLoading,
-            error: _unitedState.error!,
-          ),
+          _unitedState,
         );
       } else if (_unitedState.isLoading) {
         widget.loadingListener?.call(
           context,
-          LoadingState<V>(
-            value: _unitedState.value,
-          ),
+          _unitedState,
         );
       } else {
         widget.successListener?.call(
           context,
-          SuccessState<V>(value: _unitedState.value),
+          _unitedState,
         );
       }
     };

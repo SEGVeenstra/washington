@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide State;
+
+import 'states.dart';
 
 part 'united_state.dart';
 

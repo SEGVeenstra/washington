@@ -6,17 +6,17 @@ import 'states.dart';
 
 typedef SuccessBuilder<TValue> = Widget Function(
   BuildContext context,
-  SuccessState<TValue> state,
+  ValueState<TValue> state,
 );
 
 typedef LoadingBuilder<TValue> = Widget Function(
   BuildContext context,
-  LoadingState<TValue> state,
+  ValueState<TValue> state,
 );
 
 typedef ErrorBuilder<TValue> = Widget Function(
   BuildContext context,
-  ErrorState<TValue> state,
+  State<TValue> state,
 );
 
 typedef GeneralStateBuilder<TValue> = Widget Function(
@@ -38,7 +38,8 @@ typedef GeneralStateBuilder<TValue> = Widget Function(
 ///
 /// If you do pass an error, but have not declared an errorBuilder, this widget
 /// will throw an assertion error.
-class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
+class StateBuilder<T extends UnitedState<TValue>, TValue extends Object>
+    extends StatelessWidget {
   final SuccessBuilder<TValue>? _successBuilder;
   final ErrorBuilder<TValue>? _errorBuilder;
   final LoadingBuilder<TValue>? _loadingBuilder;
@@ -69,13 +70,7 @@ class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
     final state = context.watch<T>();
 
     if (_generalBuilder != null) {
-      return _generalBuilder!.call(
-          context,
-          State(
-            error: state.error,
-            value: state.value as TValue,
-            isLoading: state.isLoading,
-          ));
+      return _generalBuilder!.call(context, state);
     } else {
       assert(!state.hasError || state.hasError && _errorBuilder != null,
           'If you are planning on setting \'error\' you must provide an \'errorBuilder\'');
@@ -84,17 +79,12 @@ class StateBuilder<T extends UnitedState, TValue> extends StatelessWidget {
       if (state.hasError) {
         return _errorBuilder!.call(
           context,
-          ErrorState(
-              error: state.error!,
-              value: state.value as TValue,
-              isLoading: state.isLoading),
+          state,
         );
       } else if (state.isLoading) {
-        return _loadingBuilder!
-            .call(context, LoadingState(value: state.value as TValue));
+        return _loadingBuilder!.call(context, state);
       }
-      return _successBuilder!(
-          context, SuccessState(value: state.value as TValue));
+      return _successBuilder!(context, state);
     }
   }
 }

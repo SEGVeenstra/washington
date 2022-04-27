@@ -1,37 +1,10 @@
-class SuccessState<TValue> {
-  final TValue value;
-
-  const SuccessState({required this.value});
+abstract class ValueState<TValue> {
+  TValue get value;
 }
 
-class LoadingState<TValue> {
-  final TValue value;
-
-  const LoadingState({required this.value});
-}
-
-class ErrorState<TValue> {
-  final TValue value;
-  final Object error;
-  final bool isLoading;
-
-  const ErrorState({
-    required this.error,
-    required this.value,
-    required this.isLoading,
-  });
-}
-
-class State<TValue> {
-  final TValue value;
-  final Object? error;
-  final bool isLoading;
+abstract class State<TValue> implements ValueState<TValue> {
+  Object? get error;
+  bool get isLoading;
 
   bool get hasError => error != null;
-
-  const State({
-    required this.error,
-    required this.value,
-    required this.isLoading,
-  });
 }

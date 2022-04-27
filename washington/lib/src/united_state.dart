@@ -3,22 +3,26 @@ part of 'washington.dart';
 typedef StateHandler = void Function(Object event);
 
 /// A State object that will receive events dispatched by [Washington].
-class UnitedState<T extends Object> extends ChangeNotifier {
+class UnitedState<T extends Object> extends ChangeNotifier implements State<T> {
   final _handlers = <Type, StateHandler>{};
   T _value;
 
   /// The current value of this state.
+  @override
   T get value => _value;
 
   Object? _error;
 
   /// Used to indicate that something is wrong with this state.
+  @override
   Object? get error => _error;
+  @override
   bool get hasError => _error != null;
 
   bool _isLoading;
 
   /// Used to indicate if this state is currently loading.
+  @override
   bool get isLoading => _isLoading;
 
   UnitedState(
