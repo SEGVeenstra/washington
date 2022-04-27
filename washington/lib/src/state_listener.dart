@@ -8,27 +8,17 @@ import 'states.dart';
 typedef UnitedStateListener<T> = void Function(
     BuildContext context, State<T> state);
 
-typedef SuccessListener<T> = void Function(
+typedef ValueStateListener<T> = void Function(
     BuildContext context, ValueState<T> state);
-
-typedef LoadingListener<T> = void Function(
-  BuildContext context,
-  ValueState<T> state,
-);
-
-typedef ErrorListener<T> = void Function(
-  BuildContext context,
-  State<T> state,
-);
 
 /// Listen to state changes
 class StateListener<US extends UnitedState<V>, V extends Object>
     extends StatefulWidget {
   final Widget child;
   final UnitedStateListener<V>? listener;
-  final SuccessListener<V>? successListener;
-  final LoadingListener<V>? loadingListener;
-  final ErrorListener<V>? errorListener;
+  final ValueStateListener<V>? successListener;
+  final ValueStateListener<V>? loadingListener;
+  final UnitedStateListener<V>? errorListener;
 
   const StateListener({
     required this.child,

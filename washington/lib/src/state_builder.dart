@@ -4,19 +4,9 @@ import 'package:washington/washington.dart';
 
 import 'states.dart';
 
-typedef SuccessBuilder<TValue> = Widget Function(
+typedef ValueStateBuilder<TValue> = Widget Function(
   BuildContext context,
   ValueState<TValue> state,
-);
-
-typedef LoadingBuilder<TValue> = Widget Function(
-  BuildContext context,
-  ValueState<TValue> state,
-);
-
-typedef ErrorBuilder<TValue> = Widget Function(
-  BuildContext context,
-  State<TValue> state,
 );
 
 typedef GeneralStateBuilder<TValue> = Widget Function(
@@ -40,15 +30,15 @@ typedef GeneralStateBuilder<TValue> = Widget Function(
 /// will throw an assertion error.
 class StateBuilder<T extends UnitedState<TValue>, TValue extends Object>
     extends StatelessWidget {
-  final SuccessBuilder<TValue>? _successBuilder;
-  final ErrorBuilder<TValue>? _errorBuilder;
-  final LoadingBuilder<TValue>? _loadingBuilder;
+  final ValueStateBuilder<TValue>? _successBuilder;
+  final GeneralStateBuilder<TValue>? _errorBuilder;
+  final ValueStateBuilder<TValue>? _loadingBuilder;
   final GeneralStateBuilder<TValue>? _generalBuilder;
 
-  const StateBuilder({
-    required SuccessBuilder<TValue> successBuilder,
-    ErrorBuilder<TValue>? errorBuilder,
-    LoadingBuilder<TValue>? loadingBuilder,
+  const StateBuilder.separate({
+    required ValueStateBuilder<TValue> successBuilder,
+    GeneralStateBuilder<TValue>? errorBuilder,
+    ValueStateBuilder<TValue>? loadingBuilder,
     Key? key,
   })  : _generalBuilder = null,
         _errorBuilder = errorBuilder,
@@ -56,7 +46,7 @@ class StateBuilder<T extends UnitedState<TValue>, TValue extends Object>
         _successBuilder = successBuilder,
         super(key: key);
 
-  const StateBuilder.single({
+  const StateBuilder({
     required GeneralStateBuilder<TValue> builder,
     Key? key,
   })  : _generalBuilder = builder,

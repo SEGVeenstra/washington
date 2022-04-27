@@ -155,7 +155,7 @@ class MyHomePage extends StatelessWidget {
                       const Text(
                         'Current value:',
                       ),
-                      StateBuilder<CounterState, int>.single(
+                      StateBuilder<CounterState, int>(
                         builder: (context, state) {
                           final String text;
                           if (state.hasError) {
