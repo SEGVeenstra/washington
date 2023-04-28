@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:washington/washington.dart' as washington;
 
@@ -37,4 +38,22 @@ class _EventListenerState extends State<EventListener> {
 
   @override
   Widget build(BuildContext context) => widget.child;
+}
+
+class MyWidget extends StatelessWidget {
+  const MyWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final myTheme = Theme.of(context);
+    return Builder(
+      builder: (context) => Theme(
+        data: ThemeData.dark(),
+        child: Text(
+          'Some text',
+          style: myTheme.textTheme.headline1, // not the same as Theme.of(context).textTheme.headline1
+        ),
+      ),
+    );
+  }
 }

@@ -11,8 +11,7 @@ import 'package:washington/washington.dart';
 /// that you are providing so it can be found properly.
 ///
 /// Trying to provide a [UnitedState] with a normal [Provider] would show an assert error.
-class StateProvider<T extends UnitedState<Object>>
-    extends ChangeNotifierProvider<T> {
+class StateProvider<T extends UnitedState<Object>> extends ChangeNotifierProvider<T> {
   StateProvider({
     Widget? child,
     required T Function(BuildContext context) create,
@@ -26,10 +25,7 @@ class StateProvider<T extends UnitedState<Object>>
 /// Instead of having to nest StateProviders yourself, the [MultiStateProvider]
 /// will do it for you. This makes your code more readable.
 class MultiStateProvider extends MultiProvider {
-  MultiStateProvider(
-      {Key? key,
-      required Widget child,
-      required List<StateProvider<UnitedState>> stateProviders})
+  MultiStateProvider({Key? key, required Widget child, required List<StateProvider<UnitedState>> stateProviders})
       : super(
           key: key,
           providers: stateProviders,
