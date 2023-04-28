@@ -1,9 +1,9 @@
 import 'package:favorite_strings/domain/entities/favoritable_string.dart';
+import 'package:favorite_strings/ui/strings/states/all_strings_state.dart';
+import 'package:favorite_strings/ui/strings/states/favorite_strings_state.dart';
 import 'package:favorite_strings/ui/strings/widgets/string_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:washington/washington.dart';
-
-import '../all_strings_state.dart';
 
 class AllStringsTab extends StatelessWidget {
   const AllStringsTab({super.key});
@@ -18,7 +18,9 @@ class AllStringsTab extends StatelessWidget {
                 (e) => StringListItem(
                   name: e.string,
                   isFavorite: e.isFavorite,
-                  onTap: () {},
+                  onTap: () => e.isFavorite
+                      ? Washington.i.dispatch(UnfavoriteStringEvent(e.string))
+                      : Washington.i.dispatch(FavoriteStringEvent(e.string)),
                 ),
               )
               .toList(),

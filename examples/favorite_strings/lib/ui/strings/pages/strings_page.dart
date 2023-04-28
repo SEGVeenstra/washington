@@ -1,5 +1,5 @@
-import 'package:favorite_strings/ui/strings/all_strings_state.dart';
-import 'package:favorite_strings/ui/strings/favorite_strings_state.dart';
+import 'package:favorite_strings/ui/strings/states/all_strings_state.dart';
+import 'package:favorite_strings/ui/strings/states/favorite_strings_state.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:washington/washington.dart';
@@ -30,29 +30,45 @@ class _StringsPageState extends State<StringsPage> {
         StateProvider<AllStringsState>(create: (context) => GetIt.I()),
         StateProvider<FavoriteStringsState>(create: (context) => GetIt.I())
       ],
-      child: Scaffold(
-        body: IndexedStack(
-          index: _index,
-          children: const [
-            AllStringsTab(),
-            FavoriteStringsTab(),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _index,
-          onTap: _updateIndex,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.list,
+      child: EventListener(
+        listener: (context, event) {
+          if (event is OnUnfavoritedStringEvent) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('You\'ve unfavorited "${event.string}"'),
+                action: SnackBarAction(
+                  label: 'Undo',
+                  onPressed: () =>
+                      Washington.i.dispatch(FavoriteStringEvent(event.string)),
+                ),
               ),
-              label: 'All',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: 'Favorites',
-            ),
-          ],
+            );
+          }
+        },
+        child: Scaffold(
+          body: IndexedStack(
+            index: _index,
+            children: const [
+              AllStringsTab(),
+              FavoriteStringsTab(),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _index,
+            onTap: _updateIndex,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.list,
+                ),
+                label: 'All',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite),
+                label: 'Favorites',
+              ),
+            ],
+          ),
         ),
       ),
     );
